@@ -49,4 +49,5 @@ function App() {
 - @reduxjs/toolkit
 - antd
 - firebase
+- josa-js
 - react-redux

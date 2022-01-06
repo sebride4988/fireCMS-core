@@ -2,6 +2,9 @@ import { PropsWithChildren, useEffect, useMemo } from 'react';
 
 import { FirebaseApp } from '@firebase/app';
 import { configureStore, Reducer } from '@reduxjs/toolkit';
+import { ConfigProvider } from 'antd';
+import koKR from 'antd/lib/locale/ko_KR';
+import josa from 'josa-js';
 import { Provider } from 'react-redux';
 
 import Core from '..';
@@ -67,7 +70,27 @@ function FireCMSCore(props: PropsWithChildren<MergeProps>) {
     return configureStore(storeConfig);
   }, [storeConfig]);
 
-  return <Provider store={store}>{props.children}</Provider>;
+  const locale = useMemo(() => {
+    return {
+      ...koKR,
+      Form: {
+        ...koKR.Form,
+        defaultValidateMessages: {
+          ...koKR.Form?.defaultValidateMessages,
+          required: (...args: []) => {
+            const label: string = (args as any)[0];
+            return josa.r(label, '은/는') + ' 필수 입력입니다.';
+          },
+        },
+      },
+    };
+  }, []);
+
+  return (
+    <ConfigProvider locale={locale}>
+      <Provider store={store}>{props.children}</Provider>
+    </ConfigProvider>
+  );
 }
 
 FireCMSCore.defaultProps = {};
