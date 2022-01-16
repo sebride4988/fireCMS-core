@@ -2,6 +2,10 @@ import { initializeApp, FirebaseApp } from '@firebase/app';
 
 import { FirebaseConfig } from './types/FirebaseConfig';
 
+interface Service {
+  initialize(app: FirebaseApp): void;
+}
+
 class Core {
   private static _instance: Core;
   private static _app?: FirebaseApp;
@@ -10,8 +14,11 @@ class Core {
     this._app = initializeApp(firebaseConfig);
   }
 
-  public static get App() {
-    return this._app;
+  public static initializeService(service: Service) {
+    if (!this._app) {
+      throw new Error('Firebase App is not initialized');
+    }
+    service.initialize(this._app);
   }
 
   public static get Instance() {
