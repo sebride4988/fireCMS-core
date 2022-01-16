@@ -26,21 +26,19 @@ const firebaseConfig = {
   measurementId: string;
 }
 
-function App() {
-  return (
-    <React.StrictMode>
-      <FireCMSCore
-        firebaseConfig={firebaseConfig}
-        services={{
-          analytics: Analytics,
-          authentication: Authentication,
-        }}
-      >
-        {props.children}
-      </FireCMSCore>
-    </React.StrictMode>
-  );
-}
+// FireCMS 초기화
+Core.initialize(firebaseConfig);
+Core.initializeService(FireAuthentication);
+Core.initializeService(FireAnalytics);
+
+const storeConfig = {
+  reducer: {
+    authentication: FireAuthentication.reducer,
+  },
+  devTools: true,
+};
+
+...
 ```
 
 ## 라이브러리 의존성
